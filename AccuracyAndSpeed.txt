@@ -1,0 +1,44 @@
+# Accuracy and Speed
+
+# A)
+import numpy as np
+import matplotlib.pyplot as plt
+
+def f(x): #Function created
+    return x*(x-1)
+	
+x=1
+delta = 10**-2
+print((f(x+delta)-f(x))/delta)
+
+#B)
+delta2=np.array([10**-4, 10**-6, 10**-8, 10**-10, 10**-12, 10**-14]) #creating an array of delta values
+
+answer= ((f(x+delta2)-f(x))/delta2)
+print (answer)
+
+fig=plt.figure()
+ax=fig.add_subplot(1,1,1)
+ax.plot(np.log10(delta2), answer)
+
+#Exercise 4.4: Calculating integrals
+
+#A)
+
+N=100
+
+def integral_function(N):
+    h=2/N
+    k=1
+    integral=0
+    for k in range(N):
+        Xk=-1+(h*k)
+        Yk= np.sqrt(1-Xk**2)
+        integral +=h*Yk
+    return(integral)
+	
+print("The answer is", integral_function(N))
+
+#B)
+
+print("The answer is ", integral_function(500))
