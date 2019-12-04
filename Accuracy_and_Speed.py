@@ -1,9 +1,4 @@
 
-# coding: utf-8
-
-# In[21]:
-
-
 # Accuracy and Speed
 
 # A)
