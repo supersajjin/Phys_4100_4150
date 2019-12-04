@@ -1,11 +1,4 @@
 
-# coding: utf-8
-
-# # Importing Packages
-
-# In[31]:
-
-
 import numpy as np
 import astropy.constants as c
 import mpmath
@@ -14,7 +7,7 @@ import scipy.constants as sc
 import astropy.units as u
 
 
-# In[32]:
+
 
 
 #Positive Charge 
@@ -27,26 +20,26 @@ q2 = -1
 r = 0.1
 
 
-# In[33]:
+
 
 
 def Potential(q,r):
     return q/(4*np.pi*sc.epsilon_0*r)
 
 
-# In[69]:
+
 
 
 print("The potential is",Potential(q1, r)*u.volt)
 
 
-# In[70]:
+
 
 
 print("The potential is",Potential(q2, r)*u.volt)
 
 
-# In[36]:
+
 
 
 #100 points
@@ -59,7 +52,7 @@ x=np.linspace(-.5, .5, num = n)
 y=x
 
 
-# In[56]:
+
 
 
 #Will calculate the potential
@@ -69,20 +62,20 @@ for i in range (n):
     for j in range(n):
         r1= np.sqrt((x[i] - xp[0])**2+(y[j]-yp[0])**2)
         r2= np.sqrt((x[i] - xp[1])**2+(y[j]-yp[1])**2)
-        a= potential(q1,r1)
-        b= potential(q2,r2)
+        a= Potential(q1,r1)
+        b= Potential(q2,r2)
         potential_Added[i][j]=a+b
         
 
 
-# In[57]:
+
 
 
 #An array of potential that have been added and saved.
 potential_Added
 
 
-# In[63]:
+
 
 
 map=plt.imshow(potential_Added)
@@ -93,7 +86,7 @@ plt.show()
 
 # f(x+h)-f(x)/h
 
-# In[68]:
+
 
 
 
