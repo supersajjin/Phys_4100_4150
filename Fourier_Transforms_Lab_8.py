@@ -8,7 +8,7 @@ import numpy as np
 import scipy as sc
 from scipy import signal
 import matplotlib.pyplot as plt
-get_ipython().run_line_magic('matplotlib', 'inline')
+
 
 
 #Function to calculate the coefficients in the discrete Fourier transforms
