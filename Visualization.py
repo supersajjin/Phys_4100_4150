@@ -4,7 +4,7 @@
 # a)  Make a plot of the so-called deltoid curve, which is defined parametrically by the equations, x = 2 cos θ + cos 2θ, y = 2 sin θ − sin 2θ, where 0 ≤ θ < 2π. Take a set of values of θ between zero and 2π and calculate x and y for each from the equations above, then plot y as a function of x.
 # 
 
-# In[3]:
+
 
 
 #Importing that packages that I will be using for this lab.
@@ -13,28 +13,28 @@ import math
 import numpy as np
 
 
-# In[4]:
+
 
 
 #Values between 0 and 2pi
 theata = np.linspace(0, 2*np.pi )
 
 
-# In[5]:
+
 
 
 #Getting the x values 
 x= 2* np.cos(theata)+ np.cos(2*theata)
 
 
-# In[6]:
+
 
 
 #Getting the y values
 y = 2*np.sin(theata)-np.sin(2*theata)
 
 
-# In[9]:
+
 
 
 #Plotting the Deltoid Curve
@@ -49,14 +49,14 @@ plt.show()
 
 # b)  Taking this approach a step further, one can make a polar plot r = f(θ) for some function f by calculating r for a range of values of θ and then converting r and θ to Cartesian coordinates using the standard equations x = r cos θ, y = r sin θ. Use this method to make a plot of the Galilean spiral, r=θ2 for 0 ≤ θ ≤ 10π
 
-# In[10]:
+
 
 
 #Values between 0 and 10pi
 theata2= np.linspace(0, 10*np.pi, num=200)
 
 
-# In[11]:
+
 
 
 #Range of values of theta
@@ -71,7 +71,7 @@ x2=r*np.cos(theata2)
 y2=r*np.sin(theata2)
 
 
-# In[15]:
+
 
 
 #Plotting the figure
@@ -87,14 +87,14 @@ plt.show()
 
 # Using the same method, make a polar plot of “Fey’s function”
 
-# In[18]:
+
 
 
 #Getting the values from 0 to 24pi
 theata3= np.linspace(0, 24*np.pi, num = 10000)
 
 
-# In[19]:
+
 
 
 r2= np.exp(np.cos(theata3))-2*np.cos(4*theata3)+np.sin(theata3/12)**5 
@@ -108,7 +108,7 @@ x3=r2*np.cos(theata3)
 y3=r2*np.sin(theata3)
 
 
-# In[21]:
+
 
 
 #Plotting the figure
@@ -122,7 +122,7 @@ plt.show()
 # # PLOTTING ON SAME LINE
 # 
 
-# In[37]:
+
 
 
 f, axes=plt.subplots(1,3, figsize=(20,20))
