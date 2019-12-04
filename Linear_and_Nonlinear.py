@@ -1,9 +1,4 @@
 
-# coding: utf-8
-
-# In[2]:
-
-
 #Importing packages that will be used
 import numpy as np
 import matplotlib.pyplot as plt
