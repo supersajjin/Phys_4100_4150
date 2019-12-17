@@ -345,7 +345,7 @@ plt.show()
  
 
 
-print("This is the distance produced when using my loop",function(velocity1))
-print("this is the distance produced when using the bisection method", function(velocity2))
+print("This is the distance produced when using the velocity", velocity1,":",function(velocity1))
+print("this is the distance produced when there is no drag force",xpolar3[-1])
 
 
