@@ -1,3 +1,10 @@
+
+#This program asks the user to enter how far they would like to throw a football.The program gives the user the velocity necessary 
+# to  throw the football by using Runge Kutta 4th Order method. 
+
+
+
+
 import numpy as np
 import matplotlib.pyplot as plt
 #from mpl_toolkits import mplot3d
