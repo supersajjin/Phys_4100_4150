@@ -65,7 +65,8 @@ print("At what angle would you like to throw it at? Please enter any angle from 
 anglePhi = float(input()) 
 phi = anglePhi*np.pi/180 #ANGLE from the Positive Z Axis
 
-print("would you like to throw it northwest (180 degrees), northeast (45), or straight(90 degrees) down the field?") 
+print("would you like to throw it northwest, northeast, or straight down the field?")
+print("Please type either northwest, northeast, or straight") 
 angleTheta = input()
 
 #ANGLE FROM X AXIS in X-Y Plane
