@@ -22,12 +22,11 @@ C2 = (0*p*A)/2      #NO DRAG
 #as my starting point. The average height is 81 inches which turns
 #out to be 2.0574 meters
 
-N=100
+N=100               #number of slices, bigger the N, the better the h
 a=0                #Initial time in seconds
 b=6                #Final time in seconds
 h = (b-a)/N        #Step size parameter
 time = np.arange(a,b, h)    #time in seconds
-
 
 
 #TRANSFORM FROM METERS TO YARDS
@@ -37,16 +36,18 @@ def Yards(m):
 
 
 
-print('Hi. how far would you like to throw the football (in meters which will be converted to yards)?')
+print('Hi. How far would you like to throw the football (in meters which will be converted to yards)?')
 
 answer = float(input())                #Taking the user's input and changing it to an int.
 
-print(answer, "in meters is", Yards(answer), "in yards.")
+print(answer, "in meters is", Yards(answer), "in yards.") 
 
 location = Yards(answer)                #Changing meters to yards. Will be used in my loop later on
 
-print("At what angle would you like to throw it at? Please enter any angle from 10 to 80 degrees!")
+print("At what angle would you like to throw it at? Please enter any angle from 20 to 80 degrees!")
 angle = float(input())
+
+
 
 def RANGE (X,angle ): #Using the range equation to solve for V without drag.
     theta= angle *np.pi/180       #The angle the football that the user entered. 
@@ -71,13 +72,15 @@ def function(Vo):
     
 
 #THIS HAS Drag included!
-    def polar (r, t):
+    def DRAGFORCE (r, t):
         vxp = r[1]
         vyp = r[3]
         fvx2=-(C/m)*vxp*np.sqrt(vxp**2 + vyp**2) #ODE EQUATIONS for the X AXIS
         fvy2=-g-(C/m)*vyp*np.sqrt(vxp**2 + vyp**2)  #ODE EQUATIONS FOR THE Y AXIS
         return np.array([vxp,fvx2,vyp, fvy2], dtype = float)
     
+
+
 
     #lists to hold my points in the polar coordinates 
     xpolar=[]
@@ -90,18 +93,21 @@ def function(Vo):
         ypolar.append(Yards(r2[2]))
 
     
-        k1= h*polar(r2, t)
-        k2 = h*polar(r2+0.5*k1, t+0.5*h)
-        k3 = h*polar(r2+0.5*k2, t + 0.5*h)
-        k4 = h*polar(r2+ k3, t+h)
+        k1= h*DRAGFORCE(r2, t)
+        k2 = h*DRAGFORCE(r2+0.5*k1, t+0.5*h)
+        k3 = h*DRAGFORCE(r2+0.5*k2, t + 0.5*h)
+        k4 = h*DRAGFORCE(r2+ k3, t+h)
         r2= r2+ (k1+2*k2+2*k3+k4)/6
         ##THIS WILL MAKE SURE THAT THE LOOP STOPS IF Y goes below 0. 
         if Yards(r2[2])< 0:
             break
+    
+    
+    
 
-    return xpolar[-1] #HERE I AM RETURNING THE LAST VALUE AT on the X AXIS
+    return xpolar[-1] #HERE I AM RETURNING THE LAST VALUE AT on the X AXIS where Y should be 0 or close enough.
 
-print("This is the distance that the velocity produced: ", function(Vo),"yards")  #USING THE INITIAL SPEED to see what distace I got. 
+print("This is the distance that the initial velocity produced is ", function(Vo),"yards")  #USING THE INITIAL SPEED to see what distace I got. 
 
 
 
@@ -109,37 +115,47 @@ print("This is the distance that the velocity produced: ", function(Vo),"yards")
 
 
 #Using a loop to figure out the velocity needed to get to the location the user asked.
-def bis(v1, function):
-    fx = function(v1)
+def monte(initialVelocity, function):
+    fx = function(initialVelocity)
     if fx<location:
         while fx<location:
-            v1=v1+.1
-            fx=function(v1)
+            initialVelocity=initialVelocity+.1
+            fx=function(initialVelocity)
             
     elif fx>location:
         while fx>location:
-            v1=v1-.1
-            fx=function(v1)
+            initialVelocity=initialVelocity -.1
+            fx=function(initialVelocity)
             
     
-    return v1 #RETURNING THE VELOCITY
+    return initialVelocity #RETURNING THE VELOCITY
        
-velocity1 = bis (Vo, function)
+velocity1 = monte(Vo, function)
 
 print("This is the velocity given when using my loop:",velocity1,"m/s")
 
+
+
+#TESTING THE VELOCITY 
 theta= angle *np.pi/180
 vxp=velocity1*np.cos(theta)
 vyp=velocity1*np.sin(theta)
 r= np.array([0, vxp,Height, vyp] , dtype= float)
 
 #THIS HAS Drag included!
-def polar (r, t):
+def DRAGFORCE (r, t):
     vxp = r[1]
     vyp = r[3]
     fvx2=-(C/m)*vxp*np.sqrt(vxp**2 + vyp**2)
     fvy2=-g-(C/m)*vyp*np.sqrt(vxp**2 + vyp**2)
     return np.array([vxp,fvx2,vyp, fvy2], dtype = float)
+
+def NODRAGFORCE (r, t):
+        vxp = r[1]
+        vyp = r[3]
+        fvx2=-(C2/m)*vxp*np.sqrt(vxp**2 + vyp**2) #ODE EQUATIONS for the X AXIS
+        fvy2=-g-(C2/m)*vyp*np.sqrt(vxp**2 + vyp**2)  #ODE EQUATIONS FOR THE Y AXIS
+        return np.array([vxp,fvx2,vyp, fvy2], dtype = float)
 
 
 
@@ -156,16 +172,17 @@ for t in time:
     ypolar.append(Yards(r[2]))
 
     
-    k1= h*polar(r, t)
-    k2 = h*polar(r+0.5*k1, t+0.5*h)
-    k3 = h*polar(r+0.5*k2, t + 0.5*h)
-    k4 = h*polar(r+ k3, t+h)
+    k1= h*DRAGFORCE(r, t)
+    k2 = h*DRAGFORCE(r+0.5*k1, t+0.5*h)
+    k3 = h*DRAGFORCE(r+0.5*k2, t + 0.5*h)
+    k4 = h*DRAGFORCE(r+ k3, t+h)
     r= r+ (k1+2*k2+2*k3+k4)/6
     ##THIS WILL MAKE SURE THAT THE LOOP STOPS IF Y goes below 0. 
     if Yards(r[2])< 0:
         break
+FRAMES=np.size(ypolar) 
 
-FRAMES=np.size(ypolar)
+
 
 
 
@@ -179,38 +196,35 @@ FRAMES=np.size(ypolar)
 def bis2(v1, v2, function):
     
     if function(v1)>location:
-        xp=v1
-        xn=v2
+        vH=v1
+        vL=v2
         
     elif function(v1)<location:
-        xp=v2
-        xn=v1 
+        vH=v2
+        vL=v1 
         
-    x3=0.5*(xp+xn)
+    v3=0.5*(vH+vL)
 
-    
-
-    if function(x3)>location:
-        xp=x3
+    if function(v3)>location:
+        vH=v3
         
-    elif function(x3)<location:
-        xn=x3
+    elif function(v3)<location:
+        vL=v3
         
     
-    x3=0.5*(xp+xn)
+    v3=0.5*(vH+vL)
     tolerance = 1E-2
 
-    while np.abs(xp-xn)>tolerance:
+    while np.abs(vH-vL)>tolerance:
         
-        if function(x3)> location:
-            xp=x3
-        elif function(x3)<location:
-            xn=x3
+        if function(v3)> location:
+            vH=v3
+        elif function(v3)<location:
+            vL=v3
 
-        x3=0.5*(xp+xn)
+        v3=0.5*(vH+vL)
     
-    
-    return x3
+    return v3
 
 velocity2 = bis2 (Vo,Vf, function)
 
@@ -236,16 +250,52 @@ for t in time:
     ypolar2.append(Yards(r2[2]))
 
     
-    k1= h*polar(r2, t)
-    k2 = h*polar(r2+0.5*k1, t+0.5*h)
-    k3 = h*polar(r2+0.5*k2, t + 0.5*h)
-    k4 = h*polar(r2+ k3, t+h)
+    k1= h*DRAGFORCE(r2, t)
+    k2 = h*DRAGFORCE(r2+0.5*k1, t+0.5*h)
+    k3 = h*DRAGFORCE(r2+0.5*k2, t + 0.5*h)
+    k4 = h*DRAGFORCE(r2+ k3, t+h)
     r2= r2+ (k1+2*k2+2*k3+k4)/6
     ##THIS WILL MAKE SURE THAT THE LOOP STOPS IF Y goes below 0. 
     if Yards(r2[2])< 0:
         break
 
-FRAMES2=np.size(ypolar) 
+ 
+
+
+
+
+#******************NO DRAG FORCE
+theta= angle *np.pi/180
+vxp=velocity2*np.cos(theta)
+vyp=velocity2*np.sin(theta)
+r3= np.array([0, vxp,Height, vyp] , dtype= float)
+
+
+#lists to hold my points in the polar coordinates DRAG
+xpolar3=[]
+ypolar3=[]
+
+
+
+#****************RUNGE KUTTA****************************************
+
+for t in time:
+    xpolar3.append(Yards(r3[0]))
+    ypolar3.append(Yards(r3[2]))
+
+    
+    k1= h*NODRAGFORCE(r3, t)
+    k2 = h*NODRAGFORCE(r3+0.5*k1, t+0.5*h)
+    k3 = h*NODRAGFORCE(r3+0.5*k2, t + 0.5*h)
+    k4 = h*NODRAGFORCE(r3+ k3, t+h)
+    r3= r3+ (k1+2*k2+2*k3+k4)/6
+    ##THIS WILL MAKE SURE THAT THE LOOP STOPS IF Y goes below 0. 
+    if Yards(r3[2])< 0:
+        break
+
+FRAMES=np.size(ypolar) 
+
+
 
 
 #***************PLOTTING SECOND METHOD ******************************
@@ -258,20 +308,20 @@ ax1.add_patch(football1)
 ax1.set_xlabel("X (Yards)")
 ax1.set_ylabel("Y (Yards)")
 ax1.set_title("Plot Using Loop")
-ax2 = fig.add_subplot(2,2,2)
-ax2.scatter(xpolar2,ypolar2,color= 'red' )
-football2 = plt.Circle((0, Height), radius=0.3, fc='brown')
-ax2.add_patch(football2)
-ax2.set_xlabel("X (Yards)")
-ax2.set_ylabel("Y (Yards)")
-ax2.set_title("Plot Using BISECTION METHOD")
+ax3 = fig.add_subplot(2,2,2)
+ax3.scatter(xpolar3,ypolar3,color= 'red' )
+football3 = plt.Circle((0, Height), radius=0.3, fc='brown')
+ax3.add_patch(football3)
+ax3.set_xlabel("X (Yards)")
+ax3.set_ylabel("Y (Yards)")
+ax3.set_title("No Drag Force")
 
 
 def init():
     football1.center = (0, Height)
     ax1.add_patch(football1)
-    football2.center = (0, Height)
-    ax2.add_patch(football2)
+    #football3.center = (0, Height)
+    #ax3.add_patch(football3)
     return football1,
 
 def animate(i):
@@ -279,14 +329,14 @@ def animate(i):
     x = xpolar[i]
     y = ypolar[i]
     football1.center = (x, y)
-    x1, y1 = football2.center
-    x1= xpolar2[i]
-    y1= ypolar2[i]
+    #x1, y1 = football3.center
+    #x1= xpolar3[i]
+    #y1= ypolar3[i]
     return football1,
 
 anim = animation.FuncAnimation(fig, animate, 
                                init_func=init, 
-                               frames=FRAMES2, 
+                               frames=FRAMES, 
                                interval=5,
                                blit=True)
 plt.show()
