@@ -1,14 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
-#from mpl_toolkits import mplot3d
 import mpl_toolkits.mplot3d.axes3d as p3
 import matplotlib.animation as animation
 
-
-
-
-#****************************************************************
-#**************ANGLES FOR 3D PLOTS*******************************
 
 
 #theta = some angle *np.pi/180 #degrees ANGLE FROM X AXIS in X-Y Plane
@@ -33,7 +27,6 @@ r= .1725/2 #Radius in meters or 0.09432414698 yards
 A = np.pi*r**2
 p = 1.2754 #kg/m^3 AIR DENSITY
 Vo = 22 #m/s Initial Velocity.
-
 C= (Cd*p*A)/2 #drag force
 
 
@@ -69,8 +62,7 @@ print(answer, "in meters is", Yards(answer), "in yards.")
 location = Yards(answer)                #Changing meters to yards. Will be used in my loop later on
 
 print("At what angle would you like to throw it at? Please enter any angle from 10 to 80 degrees!")
-anglePhi = float(input())
-
+anglePhi = float(input()) 
 phi = anglePhi*np.pi/180 #ANGLE from the Positive Z Axis
 
 print("would you like to throw it northwest (180 degrees), northeast (45), or straight(90 degrees) down the field?") 
@@ -85,13 +77,12 @@ elif angleTheta.lower() in ['straight']:
     theta= 90*np.pi/180
 
     
-def RANGE (X,angle ): #Using the range equation to solve for V without drag.
+def RANGE (X,angle ): #Using the range equation to get an initial velocity. 
     theta= angle *np.pi/180       #The angle the football that the user entered. 
-   
     velocity = np.sqrt((X *g)/np.sin(2*theta))
     return velocity
 
-Vo = RANGE(answer, anglePhi)       #This will give me an initial velocity. I will use this as my V1 when i use bisection method.
+Vo = RANGE(answer, anglePhi)       #This will give me an initial velocity. I will use this as my V1. 
 
 
 
@@ -99,8 +90,7 @@ Vo = RANGE(answer, anglePhi)       #This will give me an initial velocity. I wil
 
 
 
-
-
+#Will test my V1 and return the final x position for the football
 def functions(Vo):
     vx= Vo*np.cos(theta)*np.sin(phi)
     vy= Vo*np.sin(theta)*np.sin(phi)
@@ -151,14 +141,14 @@ def functions(Vo):
         if Yards(r[4])< 0:
             break
     
-    return ypoints[-1]
+    return ypoints[-1]#The position where the football lands.
 
 
 
 
 
 #Using a loop to figure out the velocity needed to get to the location the user asked.
-def bis(v1, function):
+def monte(v1, function):
     fx = function(v1)
     if fx<location:
         while fx<location:
@@ -169,20 +159,12 @@ def bis(v1, function):
         while fx>location:
             v1=v1-.1
             fx=function(v1)
-            
-    
-    return v1 #RETURNING THE VELOCITY
+    return v1 #RETURNING THE VELOCITY THAT WILL GET THE FOOTBALL TO THE DESIRED LOCATION
        
-velocity1 = bis (Vo, functions)
+velocity1 = monte (Vo, functions)# FALLING MY MONTE FUNCTION TO GET THE DESIRED VELOCITY
 
 print("The velocity needed to throw it in that direction is", velocity1, "m/s")
 
-
-
-#*************SPHERICAL COORDINATES USES******************************
-#*********************************************************************
-#Getting the Velocity in the x,y, and z direction
-#This will be used for the 3d (spherical) graph.
 
 #WE PUT THE VELOCITY TO THE TEST!
 vx= velocity1*np.cos(theta)*np.sin(phi)
@@ -223,7 +205,7 @@ zpoints= []
 
 
 #************RUNGE KUTTA********************************************
-#*************3D****************************************************
+
 
 
 for t in time:
@@ -245,6 +227,8 @@ for t in time:
 print("The ball thrown with a velocity of", velocity1,"m/s landed at", ypoints[-1],"yards!")
 
 
+
+#WILL NOT TEST THE VELOCITY IF THERE IS NO DRAG!
 r2= np.array([0, vx,0, vy, Height, vz] , dtype= float)
 def noDrag(r, t):
         vx = r[1]
